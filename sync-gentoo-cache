@@ -1,0 +1,30 @@
+#!/bin/bash
+
+TOPDIR=$(realpath $(dirname $0)/..)
+
+# update gentoo cache
+export PORTDIR=${HOME}/cache/gentoo-portage
+export PORTDIR_OVERLAY=
+
+if test $(find ${PORTDIR}/metadata/timestamp.chk -mmin +180); then
+	rsync --verbose \
+		--recursive \
+		--links \
+		--safe-links \
+		--perms \
+		--times \
+		--compress \
+		--force \
+		--whole-file \
+		--delete \
+		--exclude=/distfiles \
+		--exclude=/local \
+		--exclude=/packages \
+		rsync://rsync.de.gentoo.org/gentoo-portage/ \
+		${PORTDIR}/
+fi
+
+# update gentoo eix cache
+if test ${PORTDIR}/metadata/timestamp.chk -nt ${TOPDIR}/eix.cache.gentoo; then
+	eix-update -o ${TOPDIR}/eix.cache.gentoo
+fi

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+TOPDIR=$(realpath $(dirname $0)/..)
+
+# sync local cache
+${TOPDIR}/scripts/sync-local-cache
+
+# full repoman report
+export PORTDIR=${TOPDIR}
+export PORTDIR_OVERLAY=
+
+pushd ${TOPDIR} > /dev/null
+repoman full > ${TOPDIR}/repoman.log

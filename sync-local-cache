@@ -1,0 +1,15 @@
+#!/bin/bash
+
+TOPDIR=$(realpath $(dirname $0)/..)
+
+# update local cache
+export PORTDIR=$(realpath ${TOPDIR}/../zentoo)
+export PORTDIR_OVERLAY=${TOPDIR}
+
+pushd ${TOPDIR} > /dev/null
+
+# generate manifests for distribution and repoman sanity
+repoman manifest > /dev/null
+
+# update local eix cache
+eix-update -q -o ${TOPDIR}/eix.cache.zentoo
