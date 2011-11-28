@@ -1,0 +1,18 @@
+#!/bin/bash
+
+TOPDIR=$(realpath $(dirname $0)/..)
+source "${TOPDIR}"/scripts/common.sh
+
+# sync local cache
+"${TOPDIR}"/scripts/sync-local-cache
+
+# output simplified eix-diff
+while read atom; do
+	if grep -q ${atom} -r "${TOPDIR}"/metadata/cache; then
+		continue
+	fi
+
+	echo ${atom}
+done < <(
+	eix --cache-file "${TOPDIR}"/eix.cache.zentoo --pure-packages --only-names
+)

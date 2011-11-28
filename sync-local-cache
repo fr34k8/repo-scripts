@@ -1,15 +1,26 @@
 #!/bin/bash
 
 TOPDIR=$(realpath $(dirname $0)/..)
+source "${TOPDIR}"/scripts/common.sh
 
 # update local cache
-export PORTDIR=$(realpath ${TOPDIR}/../zentoo)
-export PORTDIR_OVERLAY=${TOPDIR}
+export PORTDIR=${TOPDIR}
+export PORTDIR_OVERLAY=
 
-pushd ${TOPDIR} > /dev/null
+pushd "${TOPDIR}" > /dev/null
 
 # generate manifests for distribution and repoman sanity
 repoman manifest > /dev/null
 
-# update local eix cache
-eix-update -q -o ${TOPDIR}/eix.cache.zentoo
+if ! is_overlay; then
+	# update the metadata and use.local.desc files in the repo
+	egencache --update --update-use-local-desc --jobs=3 --portdir=$(pwd) 2>&1 | grep -v metadata-transfer
+
+	# update timestamps
+	touch metadata/timestamp.chk
+
+	# update local eix cache
+	eix-update -q -o "${TOPDIR}"/eix.cache.zentoo
+else
+	eerror "local cache not supported for overlay"
+fi

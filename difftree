@@ -1,0 +1,20 @@
+#!/bin/bash
+
+TOPDIR=$(realpath $(dirname $0)/..)
+source "${TOPDIR}"/scripts/common.sh
+
+no_overlay_support
+
+# sync gentoo cache
+"${TOPDIR}"/scripts/sync-gentoo-cache
+
+# sync local cache
+"${TOPDIR}"/scripts/sync-local-cache
+
+# output simplified eix-diff
+export DIFF_FORMAT_ALL_NEW=
+export CHAR_UPGRADE="\\>"
+export CHAR_DOWNGRADE="\\<"
+export DIFF_FORMATLINE_INSTALLEDVERSIONS=
+
+eix-diff ${TOPDIR}/eix.cache.{zentoo,gentoo} | grep -v '^\[<\]   ==' > ${TOPDIR}/difftree.log

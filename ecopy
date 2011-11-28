@@ -1,13 +1,10 @@
 #!/bin/bash
 
 TOPDIR=$(realpath $(dirname $0)/..)
+source "${TOPDIR}"/scripts/common.sh
 
 # sync gentoo repository
-${TOPDIR}/scripts/sync-gentoo-cache
-
-CACHE_PATH="${CACHE_PATH:-${HOME}/cache/gentoo-portage}"
-
-source "/etc/init.d/functions.sh"
+"${TOPDIR}"/scripts/sync-gentoo-cache
 
 if ! type -P ekeyword > /dev/null ; then
 	ewarn "This script requires the use of ekeyword, please emerge"
@@ -16,7 +13,7 @@ if ! type -P ekeyword > /dev/null ; then
 fi
 
 if ! type -P wget > /dev/null ; then
-	ewarn "This script requires the use of wgets, please emerge"
+	ewarn "This script requires the use of wget, please emerge"
 	ewarn "net-misc/wget to continue."
 	exit 1
 fi
@@ -36,37 +33,44 @@ fi
 catpkg="${1#=}"
 catpkg="${catpkg%-[0-9]*}"
 
-read CATEGORY PN PVR < <(
-eix --cache-file ${TOPDIR}/eix.cache.gentoo \
-	--exact \
-	--nocolor \
-	--pure-packages \
-	--format "<category> <name> <bestversion:VERSION>\n" \
-	${catpkg}
-)
+# try to find atom regardless of keywords
+read CATEGORY PN < <(geix --format "<category> <name>\n" ${catpkg})
+
+if [[ -z ${PN} ]]; then
+	eerror "Cannot find package ${catpkg}"
+	exit 1
+fi
 
 if [[ ${1:0:1} == "=" ]]; then
 	PVR="${1#=${catpkg}-}"
+else
+	read PVR < <(geix --stable --format "<bestversion:VERSION>\n" ${catpkg})
+
+	if [[ -z ${PVR} ]]; then
+		eerror "No atom found for ${catpkg} and ACCEPT_KEYWORDS=${ACCEPT_KEYWORDS}"
+		exit 1
+	fi
 fi
 
 ebuild="${PN}-${PVR}.ebuild"
 
 einfo "Found atom ${CATEGORY}/${PN}-${PVR}"
-einfo "Fetching files from ${CACHE_PATH} ..."
+einfo "Fetching files from ${GENTOO_CACHE} ..."
 
-# create ebuild directory
-mkdir -p "${TOPDIR}/${catpkg}"
-pushd "${TOPDIR}/${catpkg}" > /dev/null
+# create directories
+mkdir -p "${TOPDIR}"/{eclass,licenses,profiles,metadata}
+mkdir -p "${TOPDIR}"/${catpkg}
+pushd "${TOPDIR}"/${catpkg} > /dev/null
 
 # (re)fetch metadata.xml
 if [[ ! -e metadata.xml ]]; then
 	einfo "  - ${catpkg}/metadata.xml"
-	cp "${CACHE_PATH}/${catpkg}/metadata.xml" "metadata.xml"
+	cp "${GENTOO_CACHE}"/${catpkg}/metadata.xml metadata.xml
 fi
 
 # get the ebuild
 einfo "  - ${catpkg}/${ebuild}"
-cp -i "${CACHE_PATH}/${catpkg}/${ebuild}" "${ebuild}"
+cp -i "${GENTOO_CACHE}"/${catpkg}/${ebuild} ${ebuild}
 
 # source ebuild to get metadata
 PF="${ebuild/.ebuild}"
@@ -78,38 +82,42 @@ inherit() {
 	INHERIT="$@"
 }
 
-source "${ebuild}" 2> /dev/null
+source ${ebuild} 2> /dev/null
 
 # get the patches. assumed that every patch has FILESDIR in the line.
 for i in $(eval echo $(grep FILESDIR ${ebuild} | sed -e 's:.*FILESDIR[}"]*/::' -e 's:"::g' -e "s:'::" -e "s:#.*::" -e "s: .*::")); do
 	mkdir -p "files/$(dirname ${i})"
 	einfo "  - ${catpkg}/files/${i}"
-	cp "${CACHE_PATH}/${catpkg}/files/${i}" "files/${i}"
+	cp "${GENTOO_CACHE}/${catpkg}/files/${i}" "files/${i}"
 done
 
 # (re)fetch used eclasses/licenses
 for i in ${INHERIT}; do
 	einfo "  - eclass/${i}.eclass"
-	cp "${CACHE_PATH}/eclass/${i}.eclass" "${TOPDIR}/eclass/${i}.eclass"
+	cp "${GENTOO_CACHE}/eclass/${i}.eclass" "${TOPDIR}/eclass/${i}.eclass"
 	sed -i -e '/\$Header:/d' "${TOPDIR}/eclass/${i}.eclass"
 done
 
 for i in ${LICENSE}; do
 	einfo "  - licenses/${i}"
-	cp "${CACHE_PATH}/licenses/${i}" "${TOPDIR}/licenses/${i}"
+	cp "${GENTOO_CACHE}/licenses/${i}" "${TOPDIR}/licenses/${i}"
 done
 
-# force the user's keyword on the ebuild. Less work for the user.
+# reset keywords
 einfo "Setting keywords to amd64/x86 only ..."
-ekeyword ^all ~amd64 ~x86 ${ebuild} >/dev/null
+if is_overlay; then
+	ekeyword ^all ~amd64 ~x86 ${ebuild} >/dev/null
+else
+	ekeyword ^all amd64 x86 ${ebuild} >/dev/null
+fi
 
 # clean CVS headers
 sed -i -e '3d' ${ebuild}
 sed -i -e '2a# $Header: $' ${ebuild}
 
-# update manifest for changes made to the ebuild above
-einfo "Updating metadata ..."
-${TOPDIR}/scripts/sync-local-cache
+# update manifests
+einfo "Updating Manifest ..."
+repoman manifest > /dev/null
 
 # add ebuilds so repoman doesn't complain about it
 git add -A

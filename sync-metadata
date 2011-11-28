@@ -1,0 +1,22 @@
+#!/bin/bash
+
+TOPDIR=$(realpath $(dirname $0)/..)
+source "${TOPDIR}"/scripts/common.sh
+
+# sync gentoo repository
+"${TOPDIR}"/scripts/sync-gentoo-cache
+
+rsync --verbose \
+	--recursive \
+	--links \
+	--safe-links \
+	--perms \
+	--times \
+	--compress \
+	--force \
+	--whole-file \
+	--delete \
+	--exclude=/cache \
+	--exclude=timestamp* \
+	"${GENTOO_CACHE}"/metadata/ \
+	"${TOPDIR}"/metadata/
