@@ -62,6 +62,10 @@ mkdir -p "${TOPDIR}"/{eclass,licenses,profiles,metadata}
 mkdir -p "${TOPDIR}"/${catpkg}
 pushd "${TOPDIR}"/${catpkg} > /dev/null
 
+# add CATEGORY to profiles
+echo ${CATEGORY} >> "${TOPDIR}"/profiles/categories
+sort -u "${TOPDIR}"/profiles/categories -o "${TOPDIR}"/profiles/categories
+
 # (re)fetch metadata.xml
 if [[ ! -e metadata.xml ]]; then
 	einfo "  - ${catpkg}/metadata.xml"
