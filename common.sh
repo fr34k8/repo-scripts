@@ -16,7 +16,7 @@ geix() {
 }
 
 is_overlay() {
-	test $(<"${TOPDIR}"/profiles/repo_name) != zentoo
+	test $(<"${TOPDIR}"/profiles/repo_name) != gentoo
 }
 
 no_overlay_support() {
