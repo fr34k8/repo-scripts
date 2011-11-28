@@ -108,11 +108,11 @@ for i in ${LICENSE}; do
 done
 
 # reset keywords
-einfo "Setting keywords to amd64/x86 only ..."
+einfo "Setting keywords to amd64 only ..."
 if is_overlay; then
-	ekeyword ^all ~amd64 ~x86 ${ebuild} >/dev/null
+	ekeyword ^all ~amd64 ${ebuild} >/dev/null
 else
-	ekeyword ^all amd64 x86 ${ebuild} >/dev/null
+	ekeyword ^all amd64 ${ebuild} >/dev/null
 fi
 
 # clean CVS headers
