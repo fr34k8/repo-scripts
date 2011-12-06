@@ -3,9 +3,13 @@
 TOPDIR=$(realpath $(dirname $0)/..)
 source "${TOPDIR}"/scripts/common.sh
 
-# update local cache
-export PORTDIR=${TOPDIR}
-export PORTDIR_OVERLAY=
+if is_overlay; then
+	export PORTDIR=$(realpath ${TOPDIR}/../../zentoo)
+	export PORTDIR_OVERLAY=${TOPDIR}
+else
+	export PORTDIR=${TOPDIR}
+	export PORTDIR_OVERLAY=
+fi
 
 pushd "${TOPDIR}" > /dev/null
 
@@ -18,9 +22,7 @@ if ! is_overlay; then
 
 	# update timestamps
 	touch metadata/timestamp.chk
-
-	# update local eix cache
-	eix-update -q -o "${TOPDIR}"/eix.cache.zentoo
-else
-	eerror "local cache not supported for overlay"
 fi
+
+# update local eix cache
+eix-update -q -o "${TOPDIR}"/eix.cache.local

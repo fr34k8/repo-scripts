@@ -3,8 +3,6 @@
 TOPDIR=$(realpath $(dirname $0)/..)
 source "${TOPDIR}"/scripts/common.sh
 
-no_overlay_support
-
 # sync gentoo cache
 "${TOPDIR}"/scripts/sync-gentoo-cache
 
@@ -17,4 +15,6 @@ export CHAR_UPGRADE="\\>"
 export CHAR_DOWNGRADE="\\<"
 export DIFF_FORMATLINE_INSTALLEDVERSIONS=
 
-eix-diff ${TOPDIR}/eix.cache.{zentoo,gentoo} | grep -v '^\[<\]   ==' > ${TOPDIR}/difftree.log
+eix-diff ${TOPDIR}/eix.cache.{local,gentoo} | \
+	grep -v '^\[<\]   ==' | \
+	sed 's/\[<\]/   /g' > ${TOPDIR}/difftree.log
