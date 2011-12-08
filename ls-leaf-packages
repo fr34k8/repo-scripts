@@ -8,11 +8,15 @@ source "${TOPDIR}"/scripts/common.sh
 
 # output simplified eix-diff
 while read atom; do
+	if [[ ! -d ${atom} ]]; then
+		continue
+	fi
+
 	if grep -q ${atom} -r "${TOPDIR}"/metadata/cache; then
 		continue
 	fi
 
 	echo ${atom}
 done < <(
-	eix --cache-file "${TOPDIR}"/eix.cache.zentoo --pure-packages --only-names
+	eix --cache-file "${TOPDIR}"/eix.cache.local --pure-packages --only-names
 )

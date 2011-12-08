@@ -3,12 +3,11 @@
 TOPDIR=$(realpath $(dirname $0)/..)
 source "${TOPDIR}"/scripts/common.sh
 
-# sync local cache
+# sync local cache first
 "${TOPDIR}"/scripts/sync-local-cache
 
-# full repoman report
-export PORTDIR="${TOPDIR}"
-export PORTDIR_OVERLAY=
+setup_portdir
 
 pushd "${TOPDIR}" > /dev/null
-repoman full > repoman.log
+
+repoman ${1:-scan}

@@ -19,8 +19,12 @@ is_overlay() {
 	test $(<"${TOPDIR}"/profiles/repo_name) != gentoo
 }
 
-no_overlay_support() {
+setup_portdir() {
 	if is_overlay; then
-		die "This script is not supported for overlays"
+		export PORTDIR=$(realpath ${TOPDIR}/../../zentoo)
+		export PORTDIR_OVERLAY=${TOPDIR}
+	else
+		export PORTDIR=${TOPDIR}
+		export PORTDIR_OVERLAY=
 	fi
 }

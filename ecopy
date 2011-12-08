@@ -107,6 +107,8 @@ for i in ${LICENSE}; do
 	cp "${GENTOO_CACHE}/licenses/${i}" "${TOPDIR}/licenses/${i}"
 done
 
+setup_portdir
+
 # reset keywords
 einfo "Setting keywords to amd64 only ..."
 if is_overlay; then

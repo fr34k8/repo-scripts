@@ -3,26 +3,28 @@
 TOPDIR=$(realpath $(dirname $0)/..)
 source "${TOPDIR}"/scripts/common.sh
 
-if is_overlay; then
-	export PORTDIR=$(realpath ${TOPDIR}/../../zentoo)
-	export PORTDIR_OVERLAY=${TOPDIR}
-else
-	export PORTDIR=${TOPDIR}
-	export PORTDIR_OVERLAY=
-fi
+setup_portdir
 
 pushd "${TOPDIR}" > /dev/null
 
 # generate manifests for distribution and repoman sanity
 repoman manifest > /dev/null
 
-if ! is_overlay; then
-	# update the metadata and use.local.desc files in the repo
-	egencache --update --update-use-local-desc --jobs=3 --portdir=$(pwd) 2>&1 | grep -v metadata-transfer
+# setup make.conf for egencache
+mkdir -p "${TOPDIR}"/etc
+cat <<EOF > "${TOPDIR}"/etc/make.conf
+PORTDIR=${PORTDIR}
+PORTDIR_OVERLAY="${PORTDIR_OVERLAY}"
+EOF
 
-	# update timestamps
-	touch metadata/timestamp.chk
-fi
+# update the metadata and use.local.desc files in the repo
+egencache --update --update-use-local-desc \
+	--config="${TOPDIR}" --jobs=3 \
+	--repo=$(<"${TOPDIR}"/profiles/repo_name) \
+	2>&1 | grep -v metadata-transfer
+
+# update timestamps
+touch metadata/timestamp.chk
 
 # update local eix cache
 eix-update -q -o "${TOPDIR}"/eix.cache.local
