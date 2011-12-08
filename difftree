@@ -16,5 +16,8 @@ export CHAR_DOWNGRADE="\\<"
 export DIFF_FORMATLINE_INSTALLEDVERSIONS=
 
 eix-diff ${TOPDIR}/eix.cache.{local,gentoo} | \
-	grep -v '^\[<\]   ==' | \
-	sed 's/\[<\]/   /g' > ${TOPDIR}/difftree.log
+	sed '/^\[<\]   ==/d' | \
+	sed '/^\[><\]  ==/d' | \
+	sed 's/\[<\]/   /g' | \
+	sed '/(\(.*\) -> .*\1)/d' \
+	> ${TOPDIR}/difftree.log

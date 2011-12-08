@@ -16,7 +16,7 @@ geix() {
 }
 
 is_overlay() {
-	test $(<"${TOPDIR}"/profiles/repo_name) != gentoo
+	test $(<"${TOPDIR}"/profiles/repo_name) != zentoo
 }
 
 setup_portdir() {

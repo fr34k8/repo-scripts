@@ -1,0 +1,17 @@
+#!/bin/bash
+
+TOPDIR=$(realpath $(dirname $0)/..)
+source "${TOPDIR}"/scripts/common.sh
+
+ATOM=$1
+
+pushd "${TOPDIR}" > /dev/null
+
+if [[ ! -d ${ATOM} ]]; then
+	eerror "Atom ${ATOM} does not exist"
+	exit 1
+fi
+
+rm -rf ${ATOM}
+"${TOPDIR}"/scripts/ecopy ${ATOM}
+git diff --cached ${ATOM}
