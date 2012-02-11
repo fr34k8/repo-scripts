@@ -89,7 +89,7 @@ inherit() {
 source ${ebuild} 2> /dev/null
 
 # get the patches. assumed that every patch has FILESDIR in the line.
-for i in $(eval echo $(grep FILESDIR ${ebuild} | sed -e 's:.*FILESDIR[}"]*/::' -e 's:"::g' -e "s:'::" -e "s:#.*::" -e "s: .*::")); do
+for i in $(eval echo $(grep FILESDIR ${ebuild} | grep -v '#.*FILESDIR' | sed -e 's:.*FILESDIR[}"]*/::' -e 's:"::g' -e "s:'::" -e "s:#.*::" -e "s: .*::")); do
 	mkdir -p "files/$(dirname ${i})"
 	einfo "  - ${catpkg}/files/${i}"
 	cp "${GENTOO_CACHE}/${catpkg}/files/${i}" "files/${i}"
