@@ -14,10 +14,6 @@ if [[ ! -d ${catpkg} ]]; then
 	exit 1
 fi
 
-if [[ -d ${GENTOO_CACHE}/${catpkg} ]]; then
-	rm -rf ${catpkg}
-	"${TOPDIR}"/scripts/ecopy "$@"
-	git diff --cached ${catpkg}
-else
-	echo "!!! ${catpkg} not in upstream repository, leaving it alone ..."
-fi
+git reset HEAD ${catpkg}
+rm -rf ${catpkg}
+git checkout ${catpkg}

@@ -47,6 +47,11 @@ else
 	read PVR < <(geix --stable --format "<bestversion:VERSION>\n" ${catpkg})
 
 	if [[ -z ${PVR} ]]; then
+		export ACCEPT_KEYWORDS=~$(portageq envvar ARCH)
+		read PVR < <(geix --format "<bestversion:VERSION>\n" ${catpkg})
+	fi
+
+	if [[ -z ${PVR} ]]; then
 		eerror "No atom found for ${catpkg} and ACCEPT_KEYWORDS=${ACCEPT_KEYWORDS}"
 		exit 1
 	fi
@@ -90,10 +95,36 @@ source ${ebuild} 2> /dev/null
 
 # get the patches. assumed that every patch has FILESDIR in the line.
 for i in $(eval echo $(grep FILESDIR ${ebuild} | grep -v '#.*FILESDIR' | sed -e 's:.*FILESDIR[}"]*/::' -e 's:"::g' -e "s:'::" -e "s:#.*::" -e "s: .*::")); do
-	mkdir -p "files/$(dirname ${i})"
-	einfo "  - ${catpkg}/files/${i}"
-	cp "${GENTOO_CACHE}/${catpkg}/files/${i}" "files/${i}"
+	for j in "${GENTOO_CACHE}"/${catpkg}/files/${i}; do
+		k=${j#"${GENTOO_CACHE}"/${catpkg}/files/}
+		einfo "  - ${catpkg}/files/${k}"
+		mkdir -p "files/$(dirname ${k})"
+		cp "${j}" "files/${k}"
+	done
 done
+
+# apache modules
+if [[ -n ${APACHE2_MOD_CONF} ]]; then
+	mkdir -p "files/$(dirname ${APACHE2_MOD_CONF}.conf)"
+	einfo "  - ${catpkg}/files/${APACHE2_MOD_CONF}.conf"
+	cp "${GENTOO_CACHE}/${catpkg}/files/${APACHE2_MOD_CONF}.conf" "files/${APACHE2_MOD_CONF}.conf"
+fi
+
+# emacs files
+if [[ -n ${SITEFILE} ]]; then
+	mkdir -p "files/$(dirname ${SITEFILE})"
+	einfo "  - ${catpkg}/files/${SITEFILE}"
+	cp "${GENTOO_CACHE}/${catpkg}/files/${SITEFILE}" "files/${SITEFILE}"
+fi
+
+# ruby files
+if [[ -n ${RUBY_PATCHES} ]]; then
+	for i in "${RUBY_PATCHES[@]}"; do
+		mkdir -p "files/$(dirname ${i})"
+		einfo "  - ${catpkg}/files/${i}"
+		cp "${GENTOO_CACHE}/${catpkg}/files/${i}" "files/${i}"
+	done
+fi
 
 # (re)fetch used eclasses/licenses
 for i in ${INHERIT}; do
@@ -103,6 +134,7 @@ for i in ${INHERIT}; do
 done
 
 for i in ${LICENSE}; do
+	[[ ${i} == "(" || ${i} == ")" || ${i} == "||" ]] && continue
 	einfo "  - licenses/${i}"
 	cp "${GENTOO_CACHE}/licenses/${i}" "${TOPDIR}/licenses/${i}"
 done
@@ -128,6 +160,8 @@ repoman manifest > /dev/null
 # add ebuilds so repoman doesn't complain about it
 git add -A
 
-einfo
-einfo "Running repoman to check for QA problems ..."
-repoman full
+if [[ -z ${SKIP_REPOMAN} ]]; then
+	einfo
+	einfo "Running repoman to check for QA problems ..."
+	repoman full
+fi
