@@ -3,21 +3,23 @@
 TOPDIR=$(realpath $(dirname $0)/..)
 source "${TOPDIR}"/scripts/common.sh
 
-# mangle user input
-catpkg="${1#=}"
-catpkg="${catpkg%-[0-9]*}"
-
 pushd "${TOPDIR}" > /dev/null
 
-if [[ ! -d ${catpkg} ]]; then
-	eerror "Atom ${catpkg} does not exist"
-	exit 1
-fi
+for atom in "$@"; do
+	# mangle user input
+	catpkg="${atom#=}"
+	catpkg="${catpkg%-[0-9]*}"
 
-if [[ -d ${GENTOO_CACHE}/${catpkg} ]]; then
-	rm -rf ${catpkg}
-	"${TOPDIR}"/scripts/ecopy "$@"
-	git diff --cached ${catpkg}
-else
-	echo "!!! ${catpkg} not in upstream repository, leaving it alone ..."
-fi
+	if [[ ! -d ${catpkg} ]]; then
+		eerror "Atom ${catpkg} does not exist"
+		exit 1
+	fi
+
+	if [[ -d ${GENTOO_CACHE}/${catpkg} ]]; then
+		rm -rf ${catpkg}
+		"${TOPDIR}"/scripts/ecopy "${atom}"
+		git diff --cached ${catpkg}
+	else
+		echo "!!! ${catpkg} not in upstream repository, leaving it alone ..."
+	fi
+done
