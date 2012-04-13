@@ -10,11 +10,6 @@ for atom in "$@"; do
 	catpkg="${atom#=}"
 	catpkg="${catpkg%-[0-9]*}"
 
-	if [[ ! -d ${catpkg} ]]; then
-		eerror "Atom ${catpkg} does not exist"
-		exit 1
-	fi
-
 	if [[ -d ${GENTOO_CACHE}/${catpkg} ]]; then
 		rm -rf ${catpkg}
 		"${TOPDIR}"/scripts/ecopy "${atom}"

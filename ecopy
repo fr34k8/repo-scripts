@@ -131,6 +131,7 @@ for i in ${INHERIT}; do
 	einfo "  - eclass/${i}.eclass"
 	cp "${GENTOO_CACHE}/eclass/${i}.eclass" "${TOPDIR}/eclass/${i}.eclass"
 	sed -i -e '/\$Header:/d' "${TOPDIR}/eclass/${i}.eclass"
+	sed -i -e 's/^\(XORG_EAUTORECONF_ARCHES\)="\(.*\)"/\1=""/g' "${TOPDIR}/eclass/${i}.eclass"
 done
 
 for i in ${LICENSE}; do
