@@ -13,7 +13,9 @@ for atom in "$@"; do
 	if [[ -d ${GENTOO_CACHE}/${catpkg} ]]; then
 		rm -rf ${catpkg}
 		"${TOPDIR}"/scripts/ecopy "${atom}"
-		git diff --cached ${catpkg}
+		if [[ "$(git diff --cached ${catpkg})" != "" ]]; then
+			git diff --cached ${catpkg}
+		fi
 	else
 		echo "!!! ${catpkg} not in upstream repository, leaving it alone ..."
 	fi
