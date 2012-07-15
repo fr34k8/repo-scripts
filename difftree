@@ -37,6 +37,7 @@ echo
 eix-diff ${TOPDIR}/eix.cache.{local,gentoo} | \
 	grep -v 'Diffing database' | \
 	sed 's/{tbz2}//g' | \
+	sed 's/![tfm]//g' | \
 	sed '/^\[>\]   ==/d' | \
 	sed '/^\[<>\]  ==/d' | \
 	sed '/^\[><\]  ==/d' | \
