@@ -103,6 +103,14 @@ for i in $(eval echo $(grep FILESDIR ${ebuild} | grep -v '#.*FILESDIR' | sed -e 
 	done
 done
 
+if [[ -n ${PATCHES} ]]; then
+	for i in "${PATCHES[@]}"; do
+		mkdir -p "files/$(dirname ${i})"
+		einfo "  - ${catpkg}/files/${i}"
+		cp "${GENTOO_CACHE}/${catpkg}/files/${i}" "files/${i}"
+	done
+fi
+
 # apache modules
 if [[ -n ${APACHE2_MOD_CONF} ]]; then
 	mkdir -p "files/$(dirname ${APACHE2_MOD_CONF}.conf)"

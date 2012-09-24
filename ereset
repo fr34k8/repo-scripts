@@ -3,17 +3,19 @@
 TOPDIR=$(realpath $(dirname $0)/..)
 source "${TOPDIR}"/scripts/common.sh
 
-# mangle user input
-catpkg="${1#=}"
-catpkg="${catpkg%-[0-9]*}"
-
 pushd "${TOPDIR}" > /dev/null
 
-if [[ ! -d ${catpkg} ]]; then
-	eerror "Atom ${catpkg} does not exist"
-	exit 1
-fi
+# mangle user input
+for atom in "$@"; do
+	catpkg="${atom#=}"
+	catpkg="${catpkg%-[0-9]*}"
 
-git reset HEAD ${catpkg}
-rm -rf ${catpkg}
-git checkout ${catpkg}
+	if [[ ! -d ${catpkg} ]]; then
+		eerror "Atom ${catpkg} does not exist"
+		exit 1
+	fi
+
+	git reset HEAD ${catpkg}
+	rm -rf ${catpkg}
+	git checkout ${catpkg}
+done
