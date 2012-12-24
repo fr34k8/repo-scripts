@@ -3,11 +3,18 @@
 TOPDIR=$(realpath $(dirname $0)/..)
 source "${TOPDIR}"/scripts/common.sh
 
+REPO_A=${1:-${REPO_NAME}}
+REPO_B=${2:-gentoo}
+
 # sync gentoo cache
-"${TOPDIR}"/scripts/sync-gentoo-cache
+if [[ ${REPO_A} == gentoo || ${REPO_B} == gentoo ]]; then
+	"${TOPDIR}"/scripts/sync-gentoo-cache
+fi
 
 # sync local cache
-"${TOPDIR}"/scripts/sync-local-cache
+if [[ ${REPO_A} == ${REPO_NAME} || ${REPO_B} == ${REPO_NAME} ]]; then
+	"${TOPDIR}"/scripts/sync-local-cache
+fi
 
 # output simplified eix-diff
 export DIFF_FORMAT_ALL_NEW=
@@ -19,7 +26,7 @@ echo
 echo "upstream is more up to date with these packages:"
 echo
 
-eix-diff ${TOPDIR}/eix.cache.{local,gentoo} | \
+eix-diff ${TOPDIR}/eix.cache.{${REPO_A},${REPO_B}} | \
 	grep -v 'Diffing database' | \
 	sed 's/{tbz2}//g' | \
 	sed '/^\[<\]   ==/d' | \
@@ -34,10 +41,10 @@ echo
 echo "downstream is more up to date with these packages:"
 echo
 
-eix-diff ${TOPDIR}/eix.cache.{local,gentoo} | \
+eix-diff ${TOPDIR}/eix.cache.{${REPO_A},${REPO_B}} | \
 	grep -v 'Diffing database' | \
 	sed 's/{tbz2}//g' | \
-	sed 's/![tfm]//g' | \
+	sed 's/\^[tfm]\+//g' | \
 	sed '/^\[>\]   ==/d' | \
 	sed '/^\[<>\]  ==/d' | \
 	sed '/^\[><\]  ==/d' | \

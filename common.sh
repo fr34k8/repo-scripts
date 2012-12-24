@@ -1,6 +1,7 @@
 source "/etc/init.d/functions.sh"
 
 GENTOO_CACHE="${GENTOO_CACHE:-${HOME}/cache/gentoo-portage}"
+REPO_NAME=$(<"${TOPDIR}"/profiles/repo_name)
 
 die() {
 	eerror "$@"
@@ -16,7 +17,7 @@ geix() {
 }
 
 is_overlay() {
-	test $(<"${TOPDIR}"/profiles/repo_name) != zentoo
+	[[ $(<"${TOPDIR}"/profiles/repo_name) =~ "^zentoo" ]]
 }
 
 setup_portdir() {

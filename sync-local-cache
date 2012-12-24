@@ -27,4 +27,4 @@ egencache --update --update-use-local-desc \
 touch metadata/timestamp.chk
 
 # update local eix cache
-eix-update -q -o "${TOPDIR}"/eix.cache.local
+eix-update -q -o "${TOPDIR}"/eix.cache.${REPO_NAME}
