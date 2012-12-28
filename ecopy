@@ -158,6 +158,33 @@ dev-libs/mpfr)
 	fcopy "${catpkg}/files/3.1.1/patch01"
 	fcopy "${catpkg}/files/3.1.1/patch02"
 	;;
+dev-lang/lua)
+	fcopy "${catpkg}/files/lua-5.1-make-r1.patch"
+	fcopy "${catpkg}/files/lua-5.1-make_static-r1.patch"
+	fcopy "${catpkg}/files/lua-5.1-module_paths.patch"
+	fcopy "${catpkg}/files/lua-5.1-readline.patch"
+	;;
+dev-lang/php)
+	fcopy "${catpkg}/files/70_mod_php5.conf-apache2"
+	;;
+sys-devel/gcc)
+	fcopy "${catpkg}/files/awk/fixlafiles.awk"
+	fcopy "${catpkg}/files/awk/fixlafiles.awk-no_gcc_la"
+	fcopy "${catpkg}/files/c89"
+	fcopy "${catpkg}/files/c99"
+	fcopy "${catpkg}/files/fix_libtool_files.sh"
+	fcopy "${catpkg}/files/gcc-configure-LANG.patch"
+	fcopy "${catpkg}/files/gcc-configure-texinfo.patch"
+	;;
+sys-libs/glibc)
+	fcopy "${catpkg}/files/eblits/common.eblit"
+	fcopy "${catpkg}/files/eblits/pkg_preinst.eblit"
+	fcopy "${catpkg}/files/eblits/pkg_setup.eblit"
+	fcopy "${catpkg}/files/eblits/src_compile.eblit"
+	fcopy "${catpkg}/files/eblits/src_install.eblit"
+	fcopy "${catpkg}/files/eblits/src_test.eblit"
+	fcopy "${catpkg}/files/eblits/src_unpack.eblit"
+	;;
 esac
 
 # (re)fetch used eclasses/licenses

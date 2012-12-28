@@ -29,7 +29,7 @@ for atom in "$@"; do
 	rm -rf ${catpkg}
 
 	for atom in ${atoms}; do
-		"${TOPDIR}"/scripts/ecopy "${atom}" || exit 1
+		"${TOPDIR}"/scripts/ecopy "${atom}"
 	done
 
 	if [[ "$(git diff --cached ${catpkg})" != "" ]]; then
