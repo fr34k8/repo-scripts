@@ -7,7 +7,4 @@ source "${TOPDIR}"/scripts/common.sh
 "${TOPDIR}"/scripts/sync-gentoo-cache
 
 # copy the files
-for file in "$@"; do
-	mkdir -p "$(dirname "${TOPDIR}/${file}")"
-	cp -v "${GENTOO_CACHE}/${file}" "${file}"
-done
+fcopy "$@"

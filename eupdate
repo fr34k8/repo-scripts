@@ -5,18 +5,34 @@ source "${TOPDIR}"/scripts/common.sh
 
 pushd "${TOPDIR}" > /dev/null
 
+if [[ $# -gt 1 ]]; then
+	export SKIP_REPOMAN=1
+fi
+
+# expand atoms first
 for atom in "$@"; do
 	# mangle user input
 	catpkg="${atom#=}"
 	catpkg="${catpkg%-[0-9]*}"
 
-	if [[ -d ${GENTOO_CACHE}/${catpkg} ]]; then
-		rm -rf ${catpkg}
-		"${TOPDIR}"/scripts/ecopy "${atom}"
-		if [[ "$(git diff --cached ${catpkg})" != "" ]]; then
-			git diff --cached ${catpkg}
-		fi
-	else
+	echo
+	is_blacklisted ${catpkg} && continue
+
+	if [[ ! -d ${GENTOO_CACHE}/${catpkg} ]]; then
 		echo "!!! ${catpkg} not in upstream repository, leaving it alone ..."
+		continue
+	fi
+
+	# expand atom
+	atoms=$("${TOPDIR}"/profiles/releases/zentoo/eupdate.expand.sh ${atom})
+
+	rm -rf ${catpkg}
+
+	for atom in ${atoms}; do
+		"${TOPDIR}"/scripts/ecopy "${atom}" || exit 1
+	done
+
+	if [[ "$(git diff --cached ${catpkg})" != "" ]]; then
+		git diff --cached ${catpkg}
 	fi
 done

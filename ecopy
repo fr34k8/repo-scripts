@@ -73,13 +73,11 @@ sort -u "${TOPDIR}"/profiles/categories -o "${TOPDIR}"/profiles/categories
 
 # (re)fetch metadata.xml
 if [[ ! -e metadata.xml ]]; then
-	einfo "  - ${catpkg}/metadata.xml"
-	cp "${GENTOO_CACHE}"/${catpkg}/metadata.xml metadata.xml
+	fcopy ${catpkg}/metadata.xml
 fi
 
 # get the ebuild
-einfo "  - ${catpkg}/${ebuild}"
-cp -i "${GENTOO_CACHE}"/${catpkg}/${ebuild} ${ebuild}
+fcopy ${catpkg}/${ebuild}
 
 # source ebuild to get metadata
 PF="${ebuild/.ebuild}"
@@ -96,56 +94,82 @@ source ${ebuild} 2> /dev/null
 # get the patches. assumed that every patch has FILESDIR in the line.
 for i in $(eval echo $(grep FILESDIR ${ebuild} | grep -v '#.*FILESDIR' | sed -e 's:.*FILESDIR[}"]*/::' -e 's:"::g' -e "s:'::" -e "s:#.*::" -e "s: .*::")); do
 	for j in "${GENTOO_CACHE}"/${catpkg}/files/${i}; do
-		k=${j#"${GENTOO_CACHE}"/${catpkg}/files/}
-		einfo "  - ${catpkg}/files/${k}"
-		mkdir -p "files/$(dirname ${k})"
-		cp "${j}" "files/${k}"
+		fcopy "${j#"${GENTOO_CACHE}"/}"
 	done
 done
 
 if [[ -n ${PATCHES} ]]; then
 	for i in "${PATCHES[@]}"; do
-		mkdir -p "files/$(dirname ${i})"
-		einfo "  - ${catpkg}/files/${i}"
-		cp "${GENTOO_CACHE}/${catpkg}/files/${i}" "files/${i}"
+		fcopy "${catpkg}/files/${i}"
 	done
 fi
 
 # apache modules
 if [[ -n ${APACHE2_MOD_CONF} ]]; then
-	mkdir -p "files/$(dirname ${APACHE2_MOD_CONF}.conf)"
-	einfo "  - ${catpkg}/files/${APACHE2_MOD_CONF}.conf"
-	cp "${GENTOO_CACHE}/${catpkg}/files/${APACHE2_MOD_CONF}.conf" "files/${APACHE2_MOD_CONF}.conf"
+	fcopy "${catpkg}/files/${APACHE2_MOD_CONF}.conf"
 fi
 
 # emacs files
 if [[ -n ${SITEFILE} ]]; then
-	mkdir -p "files/$(dirname ${SITEFILE})"
-	einfo "  - ${catpkg}/files/${SITEFILE}"
-	cp "${GENTOO_CACHE}/${catpkg}/files/${SITEFILE}" "files/${SITEFILE}"
+	fcopy "${catpkg}/files/${SITEFILE}"
 fi
 
 # ruby files
 if [[ -n ${RUBY_PATCHES} ]]; then
 	for i in "${RUBY_PATCHES[@]}"; do
-		mkdir -p "files/$(dirname ${i})"
-		einfo "  - ${catpkg}/files/${i}"
-		cp "${GENTOO_CACHE}/${catpkg}/files/${i}" "files/${i}"
+		fcopy "${catpkg}/files/${i}"
 	done
 fi
 
+# some special cases
+case ${catpkg} in
+app-admin/eselect-blas)
+	fcopy "${catpkg}/files/blas.eselect-0.1"
+	;;
+app-editors/vim)
+	fcopy "${catpkg}/files/vim-completion"
+	fcopy "${catpkg}/files/vimrc"
+	;;
+app-editors/vim-core)
+	fcopy "${catpkg}/files/vimrc-r4"
+	fcopy "${catpkg}/files/xxd-completion"
+	;;
+app-shells/bash)
+	fcopy "${catpkg}/files/dot-bash_logout"
+	fcopy "${catpkg}/files/dot-bash_profile"
+	fcopy "${catpkg}/files/dot-bashrc"
+	;;
+net-fs/nfs-utils)
+	fcopy "${catpkg}/files/nfs.initd"
+	fcopy "${catpkg}/files/nfsmount.initd"
+	fcopy "${catpkg}/files/rpc.gssd.initd"
+	fcopy "${catpkg}/files/rpc.idmapd.initd"
+	fcopy "${catpkg}/files/rpc.pipefs.initd"
+	fcopy "${catpkg}/files/rpc.statd.initd"
+	fcopy "${catpkg}/files/rpc.svcgssd.initd"
+	;;
+x11-apps/xinit)
+	fcopy "${catpkg}/files/chooser.sh"
+	;;
+dev-haskell/alex)
+	fcopy "${catpkg}/files/happy-1.18.9-ghc-7.5.patch"
+	;;
+dev-libs/mpfr)
+	fcopy "${catpkg}/files/3.1.1/patch01"
+	fcopy "${catpkg}/files/3.1.1/patch02"
+	;;
+esac
+
 # (re)fetch used eclasses/licenses
 for i in ${INHERIT}; do
-	einfo "  - eclass/${i}.eclass"
-	cp "${GENTOO_CACHE}/eclass/${i}.eclass" "${TOPDIR}/eclass/${i}.eclass"
+	fcopy "eclass/${i}.eclass"
 	sed -i -e '/\$Header:/d' "${TOPDIR}/eclass/${i}.eclass"
 	sed -i -e 's/^\(XORG_EAUTORECONF_ARCHES\)="\(.*\)"/\1=""/g' "${TOPDIR}/eclass/${i}.eclass"
 done
 
 for i in ${LICENSE}; do
 	[[ ${i} == "(" || ${i} == ")" || ${i} == "||" ]] && continue
-	einfo "  - licenses/${i}"
-	cp "${GENTOO_CACHE}/licenses/${i}" "${TOPDIR}/licenses/${i}"
+	fcopy "licenses/${i}"
 done
 
 setup_portdir
