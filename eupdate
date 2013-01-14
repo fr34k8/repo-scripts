@@ -5,6 +5,10 @@ source "${TOPDIR}"/scripts/common.sh
 
 pushd "${TOPDIR}" > /dev/null
 
+if [[ $# -eq 0 ]]; then
+	set -- $(find . -name '*.ebuild' -printf '%h\n' | sed 's:^\./\?::g' | sort -u)
+fi
+
 if [[ $# -gt 1 ]]; then
 	export SKIP_REPOMAN=1
 fi
