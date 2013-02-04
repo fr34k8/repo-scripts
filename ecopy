@@ -139,6 +139,17 @@ app-shells/bash)
 	fcopy "${catpkg}/files/dot-bash_profile"
 	fcopy "${catpkg}/files/dot-bashrc"
 	;;
+net-fs/samba)
+	fcopy "${catpkg}/files/3.6/lmhosts"
+	fcopy "${catpkg}/files/3.6/samba.confd"
+	fcopy "${catpkg}/files/3.6/samba.initd"
+	fcopy "${catpkg}/files/3.6/samba.pam"
+	fcopy "${catpkg}/files/3.6/smb.conf.default.patch"
+	fcopy "${catpkg}/files/3.6/smbusers"
+	fcopy "${catpkg}/files/3.6/swat.xinetd"
+	fcopy "${catpkg}/files/3.6/system-auth-winbind.pam"
+	fcopy "${catpkg}/files/samba-3.4.2-lib.tevent.python.mk"
+	;;
 net-fs/nfs-utils)
 	fcopy "${catpkg}/files/nfs.initd"
 	fcopy "${catpkg}/files/nfsmount.initd"
@@ -184,6 +195,9 @@ sys-libs/glibc)
 	fcopy "${catpkg}/files/eblits/src_install.eblit"
 	fcopy "${catpkg}/files/eblits/src_test.eblit"
 	fcopy "${catpkg}/files/eblits/src_unpack.eblit"
+	;;
+dev-java/icedtea-bin)
+	fcopy "${catpkg}/files/icedtea-bin-7.env"
 	;;
 esac
 
