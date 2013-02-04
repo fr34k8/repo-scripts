@@ -1,0 +1,17 @@
+#!/bin/bash
+
+TOPDIR=$(realpath $(dirname $0)/..)
+source "${TOPDIR}"/scripts/common.sh
+
+# sync local cache first
+#"${TOPDIR}"/scripts/sync-local-cache
+
+echo "Number of packages: $(leix -cn --only-names|wc -l)"
+
+echo "EAPI distribution:"
+echo
+echo "  COUNT EAPI"
+
+for i in metadata/cache/*/*; do
+	sed 's/^$/0/g;15p;d' $i
+done | sort -n | uniq -c

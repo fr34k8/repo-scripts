@@ -17,6 +17,11 @@ geix() {
 		"$@"
 }
 
+leix() {
+	eix --cache-file "${TOPDIR}"/eix.cache.${REPO_NAME} \
+		"$@"
+}
+
 fcopy() {
 	for file in "$@"; do
 		mkdir -p "$(dirname "${TOPDIR}/${file}")"
