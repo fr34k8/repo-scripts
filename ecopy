@@ -228,14 +228,14 @@ sed -i -e '3d' ${ebuild}
 sed -i -e '2a# $Header: $' ${ebuild}
 
 # update manifests
-einfo "Updating Manifest ..."
-repoman manifest > /dev/null
-
-# add ebuilds so repoman doesn't complain about it
-git add -A
-
 if [[ -z ${SKIP_REPOMAN} ]]; then
+	einfo "Updating Manifest ..."
+	repoman manifest > /dev/null
+
 	einfo
 	einfo "Running repoman to check for QA problems ..."
 	repoman full
+
+	# add ebuilds so repoman doesn't complain about it
+	git add -A
 fi

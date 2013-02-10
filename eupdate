@@ -6,11 +6,9 @@ source "${TOPDIR}"/scripts/common.sh
 pushd "${TOPDIR}" > /dev/null
 
 if [[ $# -eq 0 ]]; then
-	set -- $(find . -name '*.ebuild' -printf '%h\n' | sed 's:^\./\?::g' | sort -u)
-fi
-
-if [[ $# -gt 1 ]]; then
 	export SKIP_REPOMAN=1
+	export SKIP_DIFF=1
+	set -- $(find . -name '*.ebuild' -printf '%h\n' | sed 's:^\./\?::g' | sort -u)
 fi
 
 # expand atoms first
@@ -36,7 +34,19 @@ for atom in "$@"; do
 		"${TOPDIR}"/scripts/ecopy "${atom}"
 	done
 
+	if [[ ${SKIP_DIFF} -eq 1 ]]; then
+		continue
+	fi
+
 	if [[ "$(git diff --cached ${catpkg})" != "" ]]; then
 		git diff --cached ${catpkg}
 	fi
 done
+
+if [[ -n ${SKIP_REPOMAN} ]]; then
+	repoman manifest
+	repoman scan
+
+	git add -A
+	git diff --cached | less
+fi
