@@ -43,6 +43,10 @@ fi
 
 if [[ ${1:0:1} == "=" ]]; then
 	PVR="${1#=${catpkg}-}"
+	einfo "Add the following to eupdate.expand.sh to pin this version:"
+	echo
+	printf '%-40s echo "=$1-%s";;\n' "$CATEGORY/$PN)" $PVR
+	echo
 else
 	read PVR < <(geix --stable --format "<bestversion:VERSION>\n" ${catpkg})
 
@@ -71,7 +75,7 @@ pushd "${TOPDIR}"/${catpkg} > /dev/null
 echo ${CATEGORY} >> "${TOPDIR}"/profiles/categories
 sort -u "${TOPDIR}"/profiles/categories -o "${TOPDIR}"/profiles/categories
 
-# (re)fetch metadata.xml
+# fetch metadata.xml
 if [[ ! -e metadata.xml ]]; then
 	fcopy ${catpkg}/metadata.xml
 fi
