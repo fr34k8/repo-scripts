@@ -203,6 +203,9 @@ sys-libs/glibc)
 dev-java/icedtea-bin)
 	fcopy "${catpkg}/files/icedtea-bin-7.env"
 	;;
+net-fs/nfs-utils)
+	fcopy "${catpkg}/files/nfs.confd"
+	;;
 esac
 
 # (re)fetch used eclasses/licenses

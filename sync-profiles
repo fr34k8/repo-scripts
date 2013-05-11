@@ -1,0 +1,68 @@
+#!/bin/bash
+
+TOPDIR=$(realpath $(dirname $0)/..)
+source "${TOPDIR}"/scripts/common.sh
+
+# sync gentoo repository
+"${TOPDIR}"/scripts/sync-gentoo-cache
+
+rsync -a --del \
+	--exclude=ChangeLog* \
+	--exclude=/arch.list \
+	--exclude=/arch/alpha/ \
+	--exclude=/arch/amd64-fbsd/ \
+	--exclude=/arch/amd64/no-multilib/ \
+	--exclude=/arch/amd64/x32/ \
+	--exclude=/arch/arm/ \
+	--exclude=/arch/hppa/ \
+	--exclude=/arch/ia64/ \
+	--exclude=/arch/m68k/ \
+	--exclude=/arch/mips/ \
+	--exclude=/arch/powerpc/ \
+	--exclude=/arch/s390/ \
+	--exclude=/arch/sh/ \
+	--exclude=/arch/sparc-fbsd/ \
+	--exclude=/arch/sparc/ \
+	--exclude=/arch/x86-fbsd/ \
+	--exclude=/arch/x86/ \
+	--exclude=/categories \
+	--exclude=/default/bsd/ \
+	--exclude=/default/linux/alpha/ \
+	--exclude=/default/linux/amd64/10.0/ \
+	--exclude=/default/linux/amd64/11.0 \
+	--exclude=/default/linux/amd64/13.0/ \
+	--exclude=/default/linux/amd64/dev/ \
+	--exclude=/default/linux/amd64/zentoo/ \
+	--exclude=/default/linux/arm/ \
+	--exclude=/default/linux/hppa/ \
+	--exclude=/default/linux/ia64/ \
+	--exclude=/default/linux/m68k/ \
+	--exclude=/default/linux/mips/ \
+	--exclude=/default/linux/powerpc/ \
+	--exclude=/default/linux/s390/ \
+	--exclude=/default/linux/sh/ \
+	--exclude=/default/linux/sparc/ \
+	--exclude=/default/linux/x86/ \
+	--exclude=/embedded/ \
+	--exclude=/features/32bit-native/ \
+	--exclude=/features/32bit-userland/ \
+	--exclude=/features/64bit-native/ \
+	--exclude=/features/selinux/ \
+	--exclude=/hardened/ \
+	--exclude=/package.mask \
+	--exclude=/prefix/ \
+	--exclude=/profiles.desc \
+	--exclude=/releases/10.0/ \
+	--exclude=/releases/13.0/ \
+	--exclude=/releases/freebsd-7.2/ \
+	--exclude=/releases/freebsd-8.0/ \
+	--exclude=/releases/freebsd-8.2/ \
+	--exclude=/releases/freebsd-9.0/ \
+	--exclude=/releases/freebsd-9.1/ \
+	--exclude=/releases/zentoo/ \
+	--exclude=/repo_name \
+	--exclude=/targets/ \
+	--exclude=/uclibc/ \
+	--exclude=/updates/3Q-2011 \
+	${GENTOO_CACHE}/profiles/ \
+	${TOPDIR}/profiles/

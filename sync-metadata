@@ -6,17 +6,14 @@ source "${TOPDIR}"/scripts/common.sh
 # sync gentoo repository
 "${TOPDIR}"/scripts/sync-gentoo-cache
 
-rsync --verbose \
-	--recursive \
-	--links \
-	--safe-links \
-	--perms \
-	--times \
-	--compress \
-	--force \
-	--whole-file \
-	--delete \
-	--exclude=/cache \
+rsync -a --del \
 	--exclude=timestamp* \
+	--exclude=/.cvsignore \
+	--exclude=/cache \
+	--exclude=/md5-cache \
+	--exclude=/news/200* \
+	--exclude=/news/2010* \
+	--exclude=/news/2011* \
+	--exclude=/news/2012* \
 	"${GENTOO_CACHE}"/metadata/ \
 	"${TOPDIR}"/metadata/

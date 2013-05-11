@@ -1,0 +1,6 @@
+#!/bin/bash
+
+TOPDIR=$(realpath $(dirname $0)/..)
+source "${TOPDIR}"/scripts/common.sh
+
+PORTDIR=${GENTOO_CACHE} overlint-cli ${TOPDIR}

@@ -45,8 +45,5 @@ done
 
 if [[ -n ${SKIP_REPOMAN} ]]; then
 	repoman manifest
-	repoman scan
-
 	git add -A
-	git diff --cached | less
 fi
