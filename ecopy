@@ -3,9 +3,6 @@
 TOPDIR=$(realpath $(dirname $0)/..)
 source "${TOPDIR}"/scripts/common.sh
 
-# sync gentoo repository
-"${TOPDIR}"/scripts/sync-gentoo-cache
-
 if ! type -P ekeyword > /dev/null ; then
 	ewarn "This script requires the use of ekeyword, please emerge"
 	ewarn "app-portage/gentoolkit-dev to continue."
@@ -128,7 +125,16 @@ fi
 # some special cases
 case ${catpkg} in
 app-admin/eselect-blas)
-	fcopy "${catpkg}/files/blas.eselect-0.1"
+	fcopy "${catpkg}/files/blas.eselect-${PV}"
+	;;
+app-admin/eselect-cblas)
+	fcopy "${catpkg}/files/cblas.eselect-${PV}"
+	;;
+app-admin/eselect-lapack)
+	fcopy "${catpkg}/files/lapack.eselect-${PV}"
+	;;
+app-admin/eselect-pinentry)
+	fcopy "${catpkg}/files/pinentry.eselect-${PV}"
 	;;
 app-editors/vim)
 	fcopy "${catpkg}/files/vim-completion"

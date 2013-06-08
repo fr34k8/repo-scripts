@@ -4,7 +4,7 @@ TOPDIR=$(realpath $(dirname $0)/..)
 source "${TOPDIR}"/scripts/common.sh
 
 # sync local cache
-"${TOPDIR}"/scripts/sync-local-cache
+"${TOPDIR}"/scripts/generate-cache
 
 # output simplified eix-diff
 while read atom; do

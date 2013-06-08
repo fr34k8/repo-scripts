@@ -3,9 +3,6 @@
 TOPDIR=$(realpath $(dirname $0)/..)
 source "${TOPDIR}"/scripts/common.sh
 
-# sync local cache first
-"${TOPDIR}"/scripts/sync-local-cache
-
 setup_portdir
 
 pushd "${TOPDIR}" > /dev/null

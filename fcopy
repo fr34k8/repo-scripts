@@ -3,8 +3,5 @@
 TOPDIR=$(realpath $(dirname $0)/..)
 source "${TOPDIR}"/scripts/common.sh
 
-# sync gentoo repository
-"${TOPDIR}"/scripts/sync-gentoo-cache
-
 # copy the files
 fcopy "$@"

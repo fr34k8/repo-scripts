@@ -3,9 +3,6 @@
 TOPDIR=$(realpath $(dirname $0)/..)
 source "${TOPDIR}"/scripts/common.sh
 
-# sync gentoo repository
-"${TOPDIR}"/scripts/sync-gentoo-cache
-
 rsync -a --del \
 	--exclude=timestamp* \
 	--exclude=/.cvsignore \

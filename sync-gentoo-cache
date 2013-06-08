@@ -1,5 +1,5 @@
-#!/bin/bash
 
+#!/bin/bash
 TOPDIR=$(realpath $(dirname $0)/..)
 source "${TOPDIR}"/scripts/common.sh
 
@@ -21,7 +21,7 @@ if test $(find "${PORTDIR}"/metadata/timestamp.chk -mmin +180); then
 		--exclude=/distfiles \
 		--exclude=/local \
 		--exclude=/packages \
-		rsync://rsync.de.gentoo.org/gentoo-portage/ \
+		rsync://rsync1.de.gentoo.org/gentoo-portage/ \
 		"${PORTDIR}"/
 fi
 
