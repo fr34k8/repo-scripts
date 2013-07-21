@@ -8,6 +8,7 @@ pushd "${TOPDIR}" > /dev/null
 if [[ $# -eq 0 ]]; then
 	export SKIP_REPOMAN=1
 	export SKIP_DIFF=1
+	export EINFO_QUIET=true
 	set -- $(find . -name '*.ebuild' -printf '%h\n' | sed 's:^\./\?::g' | sort -u)
 fi
 
@@ -17,11 +18,14 @@ for atom in "$@"; do
 	catpkg="${atom#=}"
 	catpkg="${catpkg%-[0-9]*}"
 
-	echo
+	if [[ -z $EINFO_QUIET ]]; then
+		echo
+	fi
+
 	is_blacklisted ${catpkg} && continue
 
 	if [[ ! -d ${GENTOO_CACHE}/${catpkg} ]]; then
-		echo "!!! ${catpkg} not in upstream repository, leaving it alone ..."
+		eerror "${catpkg} not in upstream repository"
 		continue
 	fi
 

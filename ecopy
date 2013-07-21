@@ -40,10 +40,6 @@ fi
 
 if [[ ${1:0:1} == "=" ]]; then
 	PVR="${1#=${catpkg}-}"
-	einfo "Add the following to eupdate.expand.sh to pin this version:"
-	echo
-	printf '%-40s echo "=$1-%s";;\n' "$CATEGORY/$PN)" $PVR
-	echo
 else
 	read PVR < <(geix --stable --format "<bestversion:VERSION>\n" ${catpkg})
 
@@ -59,6 +55,11 @@ else
 fi
 
 ebuild="${PN}-${PVR}.ebuild"
+
+if [[ ! -e "${GENTOO_CACHE}/${catpkg}/${ebuild}" ]]; then
+	eerror "${CATEGORY}/${PN}-${PVR} is not in upstream repository"
+	exit 1
+fi
 
 einfo "Found atom ${CATEGORY}/${PN}-${PVR}"
 einfo "Fetching files from ${GENTOO_CACHE} ..."
@@ -251,4 +252,11 @@ if [[ -z ${SKIP_REPOMAN} ]]; then
 
 	# add ebuilds so repoman doesn't complain about it
 	git add -A
+fi
+
+if [[ ${1:0:1} == "=" && -z $EINFO_QUIET ]]; then
+	einfo "Add the following to eupdate.expand.sh to pin this version:"
+	echo
+	printf '%-40s echo "=$1-%s";;\n' "$CATEGORY/$PN)" $PVR
+	echo
 fi

@@ -26,7 +26,11 @@ fcopy() {
 	for file in "$@"; do
 		mkdir -p "$(dirname "${TOPDIR}/${file}")"
 		einfo "  - ${file}"
-		cp "${GENTOO_CACHE}/${file}" "${TOPDIR}/${file}"
+		if [[ -z $EINFO_QUIET ]]; then
+			cp "${GENTOO_CACHE}/${file}" "${TOPDIR}/${file}"
+		else
+			cp "${GENTOO_CACHE}/${file}" "${TOPDIR}/${file}" 2>/dev/null
+		fi
 	done
 }
 
@@ -37,7 +41,7 @@ is_overlay() {
 is_blacklisted() {
 	for a in ${BLACKLIST}; do
 		if [[ ${1} == ${a} ]]; then
-			eerror "${1} is blacklisted, skipping copy ..."
+			ewarn "${1} is blacklisted"
 			return 0
 		fi
 	done
