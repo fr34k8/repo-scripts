@@ -1,0 +1,43 @@
+#!/bin/bash
+
+TOPDIR=$(realpath $(dirname $0)/..)
+source "${TOPDIR}"/scripts/common.sh
+
+pushd "${TOPDIR}" > /dev/null
+
+export SKIP_DIFF=1
+#export EINFO_QUIET=true
+set -- $(<profiles/releases/zentoo/eupdate.blacklist)
+
+# expand atoms first
+for atom in "$@"; do
+	# mangle user input
+	catpkg="${atom#=}"
+	catpkg="${catpkg%-[0-9]*}"
+
+	if [[ -z $EINFO_QUIET ]]; then
+		echo
+	fi
+
+	if [[ ! -d ${GENTOO_CACHE}/${catpkg} ]]; then
+		eerror "${catpkg} not in upstream repository"
+		continue
+	fi
+
+	# expand atom
+	atoms=$("${TOPDIR}"/profiles/releases/zentoo/eupdate.expand.sh ${atom})
+
+	rm -rf ${catpkg}
+
+	for atom in ${atoms}; do
+		"${TOPDIR}"/scripts/ecopy "${atom}"
+	done
+
+	if [[ ${SKIP_DIFF} -eq 1 ]]; then
+		continue
+	fi
+
+	if [[ "$(git diff --cached ${catpkg})" != "" ]]; then
+		git diff --cached ${catpkg}
+	fi
+done
