@@ -7,6 +7,7 @@ rsync -a --del \
 	--exclude=timestamp* \
 	--exclude=/.cvsignore \
 	--exclude=/cache \
+	--exclude=/layout.conf \
 	--exclude=/md5-cache \
 	--exclude=/news/200* \
 	--exclude=/news/2010* \

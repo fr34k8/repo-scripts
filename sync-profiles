@@ -45,6 +45,7 @@ rsync -a --del \
 	--exclude=/features/32bit-userland/ \
 	--exclude=/features/64bit-native/ \
 	--exclude=/features/selinux/ \
+	--exclude=/info_pkgs \
 	--exclude=/hardened/ \
 	--exclude=/package.mask \
 	--exclude=/prefix/ \
@@ -56,6 +57,7 @@ rsync -a --del \
 	--exclude=/releases/freebsd-8.2/ \
 	--exclude=/releases/freebsd-9.0/ \
 	--exclude=/releases/freebsd-9.1/ \
+	--exclude=/releases/freebsd-9.2/ \
 	--exclude=/releases/zentoo/ \
 	--exclude=/repo_name \
 	--exclude=/targets/ \
