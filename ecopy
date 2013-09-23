@@ -41,11 +41,11 @@ fi
 if [[ ${1:0:1} == "=" ]]; then
 	PVR="${1#=${catpkg}-}"
 else
-	read PVR < <(geix --stable --format "<bestversion:VERSION>\n" ${catpkg})
+	read PVR < <(geix --stable --format "<bestversion:PVERSION>\n" ${catpkg})
 
 	if [[ -z ${PVR} ]]; then
 		export ACCEPT_KEYWORDS=~$(portageq envvar ARCH)
-		read PVR < <(geix --format "<bestversion:VERSION>\n" ${catpkg})
+		read PVR < <(geix --format "<bestversion:PVERSION>\n" ${catpkg})
 	fi
 
 	if [[ -z ${PVR} ]]; then
