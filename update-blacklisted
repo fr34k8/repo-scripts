@@ -3,8 +3,6 @@
 TOPDIR=$(realpath $(dirname $0)/..)
 source "${TOPDIR}"/scripts/common.sh
 
-pushd "${TOPDIR}" > /dev/null
-
 export SKIP_DIFF=1
 #export EINFO_QUIET=true
 set -- $(<profiles/releases/zentoo/eupdate.blacklist)

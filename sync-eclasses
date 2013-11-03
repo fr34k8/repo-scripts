@@ -9,7 +9,5 @@ rsync -a --del \
 	${GENTOO_CACHE}/eclass/ \
 	${TOPDIR}/eclass/
 
-cd ${TOPDIR}
-
 git clean -fd eclass/
 sed -i -e '/\$Header:/d' eclass/*.eclass

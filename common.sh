@@ -1,8 +1,13 @@
 source "/etc/init.d/functions.sh"
 
-GENTOO_CACHE="${GENTOO_CACHE:-${HOME}/cache/gentoo-portage}"
+GENTOO_CACHE="${GENTOO_CACHE:-${TOPDIR}/cache/gentoo-portage}"
 REPO_NAME=$(<"${TOPDIR}"/profiles/repo_name)
 BLACKLIST=$(<"${TOPDIR}"/profiles/releases/zentoo/eupdate.blacklist)
+
+GENTOO_EIX_CACHE="${TOPDIR}"/eix.cache.gentoo
+REPO_EIX_CACHE="${TOPDIR}"/eix.cache.${REPO_NAME}
+
+cd ${TOPDIR}
 
 die() {
 	eerror "$@"
@@ -10,15 +15,12 @@ die() {
 }
 
 geix() {
-	eix --cache-file "${TOPDIR}"/eix.cache.gentoo \
-		--exact \
-		--nocolor \
-		--pure-packages \
+	eix --cache-file "${GENTOO_EIX_CACHE}" \
 		"$@"
 }
 
-leix() {
-	eix --cache-file "${TOPDIR}"/eix.cache.${REPO_NAME} \
+reix() {
+	eix --cache-file "${REPO_EIX_CACHE}" \
 		"$@"
 }
 

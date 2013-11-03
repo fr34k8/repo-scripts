@@ -26,12 +26,19 @@ if [[ -z ${1} ]] ; then
 	exit 0
 fi
 
+_geix() {
+	geix --exact \
+		--nocolor \
+		--pure-packages \
+		"$@"
+}
+
 # mangle user input
 catpkg="${1#=}"
 catpkg="${catpkg%-[0-9]*}"
 
 # try to find atom regardless of keywords
-read CATEGORY PN < <(geix --format "<category> <name>\n" ${catpkg})
+read CATEGORY PN < <(_geix --format "<category> <name>\n" ${catpkg})
 
 if [[ -z ${PN} ]]; then
 	eerror "Cannot find package ${catpkg}"
@@ -41,11 +48,11 @@ fi
 if [[ ${1:0:1} == "=" ]]; then
 	PVR="${1#=${catpkg}-}"
 else
-	read PVR < <(geix --stable --format "<bestversion:PVERSION>\n" ${catpkg})
+	read PVR < <(_geix --stable --format "<bestversion:PVERSION>\n" ${catpkg})
 
 	if [[ -z ${PVR} ]]; then
 		export ACCEPT_KEYWORDS=~$(portageq envvar ARCH)
-		read PVR < <(geix --format "<bestversion:PVERSION>\n" ${catpkg})
+		read PVR < <(_geix --format "<bestversion:PVERSION>\n" ${catpkg})
 	fi
 
 	if [[ -z ${PVR} ]]; then
@@ -252,6 +259,9 @@ if [[ -z ${SKIP_REPOMAN} ]]; then
 
 	# add ebuilds so repoman doesn't complain about it
 	git add -A
+
+	# update eix cache
+	./scripts/eix-update
 fi
 
 if [[ ${1:0:1} == "=" && -z $EINFO_QUIET ]]; then

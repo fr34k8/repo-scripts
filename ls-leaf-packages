@@ -18,5 +18,5 @@ while read atom; do
 
 	echo ${atom}
 done < <(
-	eix --cache-file "${TOPDIR}"/eix.cache.${REPO_NAME} --pure-packages --only-names
+	reix --pure-packages --only-names
 )

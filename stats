@@ -4,9 +4,16 @@ TOPDIR=$(realpath $(dirname $0)/..)
 source "${TOPDIR}"/scripts/common.sh
 
 # sync local cache first
-#"${TOPDIR}"/scripts/sync-local-cache
+"${TOPDIR}"/scripts/eix-update >/dev/null
 
-echo "Number of packages: $(leix -cn --only-names|wc -l)"
+gentoo_packages=$(geix -cn --only-names|wc -l)
+repo_packages=$(reix -cn --only-names|wc -l)
+
+echo
+echo "Repository Statistics"
+echo "====================="
+echo
+echo "Number of packages: ${repo_packages}/${gentoo_packages} ($(((${repo_packages}*100)/${gentoo_packages}))%)"
 echo
 echo "EAPI distribution:"
 echo

@@ -7,12 +7,12 @@ source "${TOPDIR}"/scripts/common.sh
 
 setup_portdir
 
-pushd "${TOPDIR}" > /dev/null
-
-# pull latest changes
-git fetch origin
-git reset --hard @{upstream}
-git clean -fd
+# pull latest changes if running on mirror
+if [[ "${TOPDIR}" == "/var/cache/mirror/zentoo/portage" ]]; then
+	git fetch origin
+	git reset --hard @{upstream}
+	git clean -fd
+fi
 
 # generate manifests for distribution and repoman sanity
 repoman manifest

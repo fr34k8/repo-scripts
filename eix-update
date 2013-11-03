@@ -1,0 +1,15 @@
+#!/bin/bash
+
+TOPDIR=$(realpath $(dirname $0)/..)
+source "${TOPDIR}"/scripts/common.sh
+
+setup_portdir
+
+# update repo cache
+./scripts/generate-cache >/dev/null
+eix-update -o "${REPO_EIX_CACHE}"
+
+# update gentoo cache
+export PORTDIR="${GENTOO_CACHE}"
+export PORTDIR_OVERLAY=
+eix-update -o "${GENTOO_EIX_CACHE}"

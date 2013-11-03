@@ -7,6 +7,4 @@ source "${TOPDIR}"/scripts/common.sh
 
 setup_portdir
 
-pushd "${TOPDIR}" > /dev/null
-
 repoman ${1:-scan}

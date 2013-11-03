@@ -3,8 +3,6 @@
 TOPDIR=$(realpath $(dirname $0)/..)
 source "${TOPDIR}"/scripts/common.sh
 
-pushd "${TOPDIR}" > /dev/null
-
 # mangle user input
 for atom in "$@"; do
 	catpkg="${atom#=}"

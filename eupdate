@@ -3,7 +3,7 @@
 TOPDIR=$(realpath $(dirname $0)/..)
 source "${TOPDIR}"/scripts/common.sh
 
-pushd "${TOPDIR}" > /dev/null
+setup_portdir
 
 if [[ $# -eq 0 ]]; then
 	export SKIP_REPOMAN=1
@@ -50,4 +50,7 @@ done
 if [[ -n ${SKIP_REPOMAN} ]]; then
 	repoman manifest
 	git add -A
+
+	# update eix cache
+	./scripts/eix-update
 fi
