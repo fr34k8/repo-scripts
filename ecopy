@@ -259,9 +259,6 @@ if [[ -z ${SKIP_REPOMAN} ]]; then
 
 	# add ebuilds so repoman doesn't complain about it
 	git add -A
-
-	# update eix cache
-	./scripts/eix-update
 fi
 
 if [[ ${1:0:1} == "=" && -z $EINFO_QUIET ]]; then
