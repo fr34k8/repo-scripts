@@ -15,13 +15,17 @@ die() {
 }
 
 geix() {
-	eix --cache-file "${GENTOO_EIX_CACHE}" \
-		"$@"
+	env \
+		PORTDIR=${GENTOO_CACHE} \
+		PORTAGE_PROFILE=${GENTOO_CACHE}/profiles/default/linux/amd64/13.0 \
+		eix --cache-file "${GENTOO_EIX_CACHE}" "$@"
 }
 
 reix() {
-	eix --cache-file "${REPO_EIX_CACHE}" \
-		"$@"
+	env \
+		PORTDIR=${TOPDIR} \
+		PORTAGE_PROFILE=${TOPDIR}/profiles/default/linux/amd64/11.0 \
+		eix --cache-file "${REPO_EIX_CACHE}" "$@"
 }
 
 fcopy() {

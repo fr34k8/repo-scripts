@@ -7,9 +7,9 @@ setup_portdir
 
 # update repo cache
 ./scripts/generate-cache >/dev/null
-eix-update -o "${REPO_EIX_CACHE}"
+eix-update -o "${REPO_EIX_CACHE}" -r /usr/portage portage -x portage
 
 # update gentoo cache
 export PORTDIR="${GENTOO_CACHE}"
 export PORTDIR_OVERLAY=
-eix-update -o "${GENTOO_EIX_CACHE}"
+eix-update -o "${GENTOO_EIX_CACHE}" -r /usr/portage portage -x portage

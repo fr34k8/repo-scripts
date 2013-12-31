@@ -12,7 +12,7 @@ while read atom; do
 		continue
 	fi
 
-	if grep -q ${atom} -r "${TOPDIR}"/metadata/cache; then
+	if grep -q ${atom} -r "${TOPDIR}"/metadata/md5-cache; then
 		continue
 	fi
 
