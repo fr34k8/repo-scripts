@@ -11,6 +11,7 @@ rsync -a --del \
 	--exclude=/arch/amd64/no-multilib/ \
 	--exclude=/arch/amd64/x32/ \
 	--exclude=/arch/arm/ \
+	--exclude=/arch/arm64/ \
 	--exclude=/arch/hppa/ \
 	--exclude=/arch/ia64/ \
 	--exclude=/arch/m68k/ \
@@ -31,6 +32,7 @@ rsync -a --del \
 	--exclude=/default/linux/amd64/dev/ \
 	--exclude=/default/linux/amd64/zentoo/ \
 	--exclude=/default/linux/arm/ \
+	--exclude=/default/linux/arm64/ \
 	--exclude=/default/linux/hppa/ \
 	--exclude=/default/linux/ia64/ \
 	--exclude=/default/linux/m68k/ \
@@ -44,6 +46,7 @@ rsync -a --del \
 	--exclude=/features/32bit-native/ \
 	--exclude=/features/32bit-userland/ \
 	--exclude=/features/64bit-native/ \
+	--exclude=/features/prefix/ \
 	--exclude=/features/selinux/ \
 	--exclude=/info_pkgs \
 	--exclude=/hardened/ \

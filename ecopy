@@ -169,7 +169,9 @@ net-fs/samba)
 	fcopy "${catpkg}/files/samba-3.4.2-lib.tevent.python.mk"
 	;;
 net-fs/nfs-utils)
+	fcopy "${catpkg}/files/nfs.confd"
 	fcopy "${catpkg}/files/nfs.initd"
+	fcopy "${catpkg}/files/nfsmount.confd"
 	fcopy "${catpkg}/files/nfsmount.initd"
 	fcopy "${catpkg}/files/rpc.gssd.initd"
 	fcopy "${catpkg}/files/rpc.idmapd.initd"
@@ -180,9 +182,6 @@ net-fs/nfs-utils)
 x11-apps/xinit)
 	fcopy "${catpkg}/files/chooser.sh"
 	;;
-dev-haskell/alex)
-	fcopy "${catpkg}/files/happy-1.18.9-ghc-7.5.patch"
-	;;
 dev-libs/mpfr)
 	fcopy "${catpkg}/files/3.1.1/patch01"
 	fcopy "${catpkg}/files/3.1.1/patch02"
@@ -192,6 +191,16 @@ dev-lang/lua)
 	fcopy "${catpkg}/files/lua-5.1-make_static-r1.patch"
 	fcopy "${catpkg}/files/lua-5.1-module_paths.patch"
 	fcopy "${catpkg}/files/lua-5.1-readline.patch"
+	;;
+dev-lang/perl)
+	fcopy "${catpkg}/files/eblits/common-v50160001.eblit"
+	fcopy "${catpkg}/files/eblits/pkg_postinst-v50160001.eblit"
+	fcopy "${catpkg}/files/eblits/pkg_postrm-v50160001.eblit"
+	fcopy "${catpkg}/files/eblits/pkg_setup-v50160001.eblit"
+	fcopy "${catpkg}/files/eblits/src_configure-v50160001.eblit"
+	fcopy "${catpkg}/files/eblits/src_install-v50160001.eblit"
+	fcopy "${catpkg}/files/eblits/src_prepare-v50160001.eblit"
+	fcopy "${catpkg}/files/eblits/src_test-v50160001.eblit"
 	;;
 dev-lang/php)
 	fcopy "${catpkg}/files/70_mod_php5.conf-apache2"
@@ -214,11 +223,8 @@ sys-libs/glibc)
 	fcopy "${catpkg}/files/eblits/src_test.eblit"
 	fcopy "${catpkg}/files/eblits/src_unpack.eblit"
 	;;
-dev-java/icedtea-bin)
-	fcopy "${catpkg}/files/icedtea-bin-7.env"
-	;;
-net-fs/nfs-utils)
-	fcopy "${catpkg}/files/nfs.confd"
+dev-java/oracle-jdk-bin)
+	fcopy "${catpkg}/files/oracle-jdk-bin-1.7.env"
 	;;
 esac
 
@@ -258,12 +264,10 @@ if [[ -z ${SKIP_REPOMAN} ]]; then
 	repoman full
 
 	# add ebuilds so repoman doesn't complain about it
-	git add -A
+	git add -A .
 fi
 
 if [[ ${1:0:1} == "=" && -z $EINFO_QUIET ]]; then
-	einfo "Add the following to eupdate.expand.sh to pin this version:"
-	echo
-	printf '%-40s echo "=$1-%s";;\n' "$CATEGORY/$PN)" $PVR
-	echo
+	line=$(printf "%-40s echo \"=\$1-%s\"\;\;" "$CATEGORY/$PN)" $PVR)
+	sed -i -e "/^*)/i${line}" "${TOPDIR}"/profiles/releases/zentoo/eupdate.expand.sh
 fi
