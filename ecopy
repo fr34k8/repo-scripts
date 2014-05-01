@@ -245,9 +245,9 @@ setup_portdir
 # reset keywords
 einfo "Setting keywords to amd64 only ..."
 if is_overlay; then
-	ekeyword ^all ~amd64 ${ebuild} >/dev/null
+	"${TOPDIR}"/scripts/ekeyword.py ^all ~amd64 ${ebuild} >/dev/null
 else
-	ekeyword ^all amd64 ${ebuild} >/dev/null
+	"${TOPDIR}"/scripts/ekeyword.py ^all amd64 ${ebuild} >/dev/null
 fi
 
 # clean CVS headers
