@@ -225,6 +225,7 @@ sys-libs/glibc)
 	;;
 dev-java/oracle-jdk-bin)
 	fcopy "${catpkg}/files/oracle-jdk-bin-1.7.env"
+	fcopy "${catpkg}/files/oracle-jdk-bin-1.8.env"
 	;;
 esac
 
