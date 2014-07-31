@@ -23,7 +23,7 @@ if [[ ! -e "${tschk}" || $(find "${tschk}" -mmin +180) != "" ]]; then
 		--exclude=/distfiles \
 		--exclude=/local \
 		--exclude=/packages \
-		rsync://rsync1.de.gentoo.org/gentoo-portage/ \
+		rsync://rsync.de.gentoo.org/gentoo-portage/ \
 		"${PORTDIR}"/
 fi
 
