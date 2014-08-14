@@ -10,6 +10,7 @@ export PORTDIR_OVERLAY=
 tschk="${PORTDIR}"/metadata/timestamp.chk
 
 if [[ ! -e "${tschk}" || $(find "${tschk}" -mmin +180) != "" ]]; then
+	mkdir -p "${PORTDIR}"/
 	rsync --verbose \
 		--recursive \
 		--links \

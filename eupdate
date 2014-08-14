@@ -30,7 +30,11 @@ for atom in "$@"; do
 	fi
 
 	# expand atom
-	atoms=$("${TOPDIR}"/profiles/releases/zentoo/eupdate.expand.sh ${atom})
+	if [[ -x "${TOPDIR}"/profiles/releases/zentoo/eupdate.expand.sh ]]; then
+		atoms=$("${TOPDIR}"/profiles/releases/zentoo/eupdate.expand.sh ${atom})
+	else
+		atoms=${atom}
+	fi
 
 	rm -rf ${catpkg}
 

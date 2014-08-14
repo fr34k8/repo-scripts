@@ -2,7 +2,6 @@ source "/etc/init.d/functions.sh"
 
 GENTOO_CACHE="${GENTOO_CACHE:-${TOPDIR}/cache/gentoo-portage}"
 REPO_NAME=$(<"${TOPDIR}"/profiles/repo_name)
-BLACKLIST=$(<"${TOPDIR}"/profiles/releases/zentoo/eupdate.blacklist)
 
 GENTOO_EIX_CACHE="${TOPDIR}"/eix.cache.gentoo
 REPO_EIX_CACHE="${TOPDIR}"/eix.cache.${REPO_NAME}
@@ -45,12 +44,15 @@ is_overlay() {
 }
 
 is_blacklisted() {
-	for a in ${BLACKLIST}; do
-		if [[ ${1} == ${a} ]]; then
-			ewarn "${1} is blacklisted"
-			return 0
-		fi
-	done
+	if [[ -r "${TOPDIR}"/profiles/releases/zentoo/eupdate.blacklist ]]; then
+		blacklist=$(<"${TOPDIR}"/profiles/releases/zentoo/eupdate.blacklist)
+		for a in ${blacklist}; do
+			if [[ ${1} == ${a} ]]; then
+				ewarn "${1} is blacklisted"
+				return 0
+			fi
+		done
+	fi
 
 	return 1
 }
