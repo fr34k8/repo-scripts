@@ -1,4 +1,4 @@
-source "/etc/init.d/functions.sh"
+source "/lib/gentoo/functions.sh"
 
 GENTOO_CACHE="${GENTOO_CACHE:-${TOPDIR}/cache/gentoo-portage}"
 REPO_NAME=$(<"${TOPDIR}"/profiles/repo_name)

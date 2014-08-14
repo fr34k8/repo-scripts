@@ -4,7 +4,7 @@ TOPDIR=$(realpath $(dirname $0)/..)
 source "${TOPDIR}"/scripts/common.sh
 
 # sync local cache
-"${TOPDIR}"/scripts/generate-cache
+"${TOPDIR}"/scripts/generate-cache > /dev/null
 
 # output simplified eix-diff
 while read atom; do
@@ -19,4 +19,4 @@ while read atom; do
 	echo ${atom}
 done < <(
 	reix --pure-packages --only-names
-)
+) | sort -u
