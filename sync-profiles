@@ -8,6 +8,7 @@ rsync -a --del \
 	--exclude=/arch.list \
 	--exclude=/arch/alpha/ \
 	--exclude=/arch/amd64-fbsd/ \
+	--exclude=/arch/amd64/no-emul-linux-x86/eapi \
 	--exclude=/arch/amd64/no-multilib/ \
 	--exclude=/arch/amd64/x32/ \
 	--exclude=/arch/arm/ \
@@ -41,6 +42,7 @@ rsync -a --del \
 	--exclude=/default/linux/s390/ \
 	--exclude=/default/linux/sh/ \
 	--exclude=/default/linux/sparc/ \
+	--exclude=/default/linux/uclibc \
 	--exclude=/default/linux/x86/ \
 	--exclude=/embedded/ \
 	--exclude=/features/32bit-native/ \
@@ -48,8 +50,8 @@ rsync -a --del \
 	--exclude=/features/64bit-native/ \
 	--exclude=/features/prefix/ \
 	--exclude=/features/selinux/ \
-	--exclude=/info_pkgs \
 	--exclude=/hardened/ \
+	--exclude=/info_pkgs \
 	--exclude=/package.mask \
 	--exclude=/prefix/ \
 	--exclude=/profiles.desc \

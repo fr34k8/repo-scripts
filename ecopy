@@ -219,7 +219,9 @@ sys-libs/glibc)
 	fcopy "${catpkg}/files/eblits/pkg_preinst.eblit"
 	fcopy "${catpkg}/files/eblits/pkg_setup.eblit"
 	fcopy "${catpkg}/files/eblits/src_compile.eblit"
+	fcopy "${catpkg}/files/eblits/src_configure.eblit"
 	fcopy "${catpkg}/files/eblits/src_install.eblit"
+	fcopy "${catpkg}/files/eblits/src_prepare.eblit"
 	fcopy "${catpkg}/files/eblits/src_test.eblit"
 	fcopy "${catpkg}/files/eblits/src_unpack.eblit"
 	;;
