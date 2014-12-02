@@ -1,9 +1,9 @@
 #!/bin/bash
 
-set -e
-
 TOPDIR=$(realpath $(dirname $0)/..)
 source "${TOPDIR}"/scripts/common.sh
+
+set -e
 
 setup_portdir
 
