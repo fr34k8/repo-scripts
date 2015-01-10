@@ -1,6 +1,6 @@
 source "/lib/gentoo/functions.sh"
 
-GENTOO_CACHE="${GENTOO_CACHE:-${TOPDIR}/cache/gentoo-portage}"
+GENTOO_CACHE="${GENTOO_CACHE:-${HOME}/.cache/gentoo-portage}"
 REPO_NAME=$(<"${TOPDIR}"/profiles/repo_name)
 
 GENTOO_EIX_CACHE="${TOPDIR}"/eix.cache.gentoo

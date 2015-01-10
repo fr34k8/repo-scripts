@@ -95,7 +95,10 @@ PN="${P%-*}"
 PV="${P/${PN}-}"
 
 inherit() {
-	INHERIT="$@"
+	INHERIT="${INHERIT} $*"
+	for f in $*; do
+		source "${TOPDIR}/eclass/${f}.eclass"
+	done
 }
 
 source ${ebuild} 2> /dev/null
@@ -233,9 +236,11 @@ esac
 
 # (re)fetch used eclasses/licenses
 for i in ${INHERIT}; do
-	fcopy "eclass/${i}.eclass"
-	sed -i -e '/\$Header:/d' "${TOPDIR}/eclass/${i}.eclass"
-	sed -i -e 's/^\(XORG_EAUTORECONF_ARCHES\)="\(.*\)"/\1=""/g' "${TOPDIR}/eclass/${i}.eclass"
+	if [[ ! -e /usr/portage/eclass/${i}.eclass ]]; then
+		fcopy "eclass/${i}.eclass"
+		sed -i -e '/\$Header:/d' "${TOPDIR}/eclass/${i}.eclass"
+		sed -i -e 's/^\(XORG_EAUTORECONF_ARCHES\)="\(.*\)"/\1=""/g' "${TOPDIR}/eclass/${i}.eclass"
+	fi
 done
 
 for i in ${LICENSE}; do
